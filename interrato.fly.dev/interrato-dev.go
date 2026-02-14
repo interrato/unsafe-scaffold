@@ -129,6 +129,10 @@ func interratoDev(mux *http.ServeMux) {
 		path := fmt.Sprintf("apprendimento/lezione%d", i+1)
 		mux.Handle("interrato.dev/"+path, apprendimentoHandler(path+".html"))
 	}
+	mux.Handle(
+		"interrato.dev/apprendimento/cheatsheet",
+		apprendimentoHandler("apprendimento/cheatsheet.html"),
+	)
 
 	funcs := template.FuncMap{
 		"hasPrefix": strings.HasPrefix,

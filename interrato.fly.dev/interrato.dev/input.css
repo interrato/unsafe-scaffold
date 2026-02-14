@@ -130,6 +130,10 @@
         @apply whitespace-nowrap;
         @apply after:content-['_↗'];
     }
+    a[download] {
+        @apply whitespace-nowrap;
+        @apply after:content-['_↓'];
+    }
 
     /* Code */
     pre {
