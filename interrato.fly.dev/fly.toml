@@ -26,6 +26,6 @@ app = "interrato"
     timeout = "2s"
     method = "get"
     path = "/"
-    protocol = "https"
+    protocol = "http"
     [services.http_checks.headers]
       Host = "interrato.dev"
