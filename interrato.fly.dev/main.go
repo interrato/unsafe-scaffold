@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -29,13 +30,23 @@ func main() {
 func MuxHandler() http.Handler {
 	mux := http.NewServeMux()
 
+	// CSP style-src hashes
+	var styles []string
+
 	mux.Handle("interrato.dev/{$}", StaticHandler())
-	mux.Handle("interrato.dev/static/", StaticHandler())
+	styles = append(styles, "sha256-Vi7t4iKt3vd3m6kSdzNhTzxGEoHplRNXq56Bq4i6+Yo=")
+	mux.Handle("interrato.dev/static/pdf/", StaticHandler())
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload")
-		w.Header().Set("Content-Security-Policy", "default-src 'self'; frame-ancestors 'none'")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
+		var b strings.Builder
+		for _, hash := range styles {
+			b.WriteString(" '")
+			b.WriteString(hash)
+			b.WriteString("'")
+		}
+		w.Header().Set("Content-Security-Policy", "default-src 'self'; frame-ancestors 'none'; style-src"+b.String())
 		mux.ServeHTTP(w, r)
 	})
 }

@@ -16,6 +16,9 @@
       devShells = forAllSystems (pkgs: {
         default = pkgs.mkShell {
           buildInputs = with pkgs; [
+            bash-language-server
+            shellcheck
+            shfmt
             go
             gopls
             just
