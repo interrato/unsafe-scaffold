@@ -34,8 +34,12 @@ func MuxHandler() http.Handler {
 	var styles []string
 
 	mux.Handle("interrato.dev/{$}", StaticHandler())
-	styles = append(styles, "sha256-Vi7t4iKt3vd3m6kSdzNhTzxGEoHplRNXq56Bq4i6+Yo=")
+	styles = append(styles, "sha256-RrMRBtTsSwzS27qdQ/AfukQ4Osp/FjAM5Dqov3Q1KQw=")
+	mux.Handle("interrato.dev/static/fonts/", StaticHandler())
 	mux.Handle("interrato.dev/static/pdf/", StaticHandler())
+
+	mux.Handle("interrato.dev/apprendimento/", HTMLHandler("apprendimento.html"))
+	mux.Handle("interrato.dev/infosec/", HTMLHandler("infosec.html"))
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload")
@@ -60,4 +64,18 @@ func StaticHandler() http.Handler {
 		log.Fatal(err)
 	}
 	return http.FileServerFS(content)
+}
+
+//go:embed *.html
+var htmlContent embed.FS
+
+func HTMLHandler(name string) http.Handler {
+	content, err := htmlContent.ReadFile(name)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.Write(content)
+	})
 }

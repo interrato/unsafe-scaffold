@@ -1,3 +1,31 @@
 #!/usr/bin/env bash
 
-sha256sum "$1" | xxd -r -p | base64
+PROG="$(basename "$0")"
+
+path="$1"
+
+if [[ -z "$path" ]]; then
+	echo "$PROG: error: path is empty" >&2
+	exit 1
+fi
+
+if [[ ! -e "$path" ]]; then
+	echo "$PROG: error: file not found" >&2
+	exit 1
+fi
+
+if [[ ! -f "$path" ]]; then
+	echo "$PROG: error: path is not a file" >&2
+	exit 1
+fi
+
+if [[ ! -s "$path" ]]; then
+	echo "$PROG: error: file is empty" >&2
+	exit 1
+fi
+
+content="$(perl -0777 -ne 'print $1 if /<style\b[^>]*>(.*?)<\/style>/s' "$path")"
+
+hash="$(printf '%s' "$content" | sha256sum | awk '{print $1}' | xxd -r -p | base64)"
+
+printf 'sha256-%s' "$hash"
