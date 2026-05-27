@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="250" height="250">
-<path d="m124,75a50,50 0 1,0 2,0"/>
-<g id="c"><g id="b">
-<path id="a" d="m124,5a32,32 0 1,0 2,0"/>
-<use xlink:href="#a" transform="rotate(45 125,125)"/></g>
-<use xlink:href="#b" transform="rotate(90 125,125)"/></g>
-<use xlink:href="#c" transform="rotate(180 125,125)"/>
-</svg>

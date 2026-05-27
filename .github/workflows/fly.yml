@@ -5,19 +5,14 @@ on:
       - main
     paths:
       - 'interrato.fly.dev/**'
+permissions:
+  contents: read
 jobs:
   deploy:
     name: Deploy app
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: |
-          npm install -D tailwindcss@3
-          cd interrato.fly.dev/interrato.dev
-          npx tailwindcss -i input.css -o static/build.css --minify
+      - uses: actions/checkout@v6
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only ./interrato.fly.dev
         env:

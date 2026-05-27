@@ -1,74 +1,9 @@
-# Run the 'develop' recipe
 default: develop
 
-# List all recipes
 @list:
-    just --list --unsorted
+	just --list --unsorted
 
 alias help := list
 
-# Rebuild the CSS minimized for prod
-@build:
-    pushd interrato.dev > /dev/null && tailwindcss -m -i input.css -o static/build.css && popd > /dev/null
-
-# Watch for changes, rebuild the CSS, restart the server
 @develop:
-    watchexec -c -r "pushd interrato.dev > /dev/null && tailwindcss -i input.css -o static/build.css && popd > /dev/null && go run ."
-
-# Create a new note (aka blog post)
-@create-note slug:
-    printf '{{{{ define "content" }}\n<article>\n</article>\n{{{{ end }}\n\n<!-- vim: set tw=100: -->' > ./interrato.dev/templates/notes/{{slug}}.html
-
-# Rename an existing note
-@rename-note old_slug new_slug:
-    mv ./interrato.dev/templates/notes/{{old_slug}}.html ./interrato.dev/templates/notes/{{new_slug}}.html
-
-# Protect an existing note
-@protect-note slug:
-    # Generates a proxy HTML file to expose CSS classes to Tailwind
-    grep 'class=' ./interrato.dev/templates/notes/{{slug}}.html | perl -pe 's|^.*?<|<|' | perl -pe 's|(class=".*?").*|\1>|' > ./interrato.dev/templates/notes/{{slug}}_proxy.html
-    # Encrypts the selected note with a passphrase chosen interactively using age
-    go run ./cmd/age-encrypt/age-encrypt.go ./interrato.dev/templates/notes/{{slug}}.html > ./interrato.dev/templates/notes/{{slug}}.html.age
-
-# Unprotect an existing protected note
-@unprotect-note slug:
-    age -d ./interrato.dev/templates/notes/{{slug}}.html.age > ./interrato.dev/templates/notes/{{slug}}.html
-
-# Initialize local state management
-init:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    echo 'warning: assuming "remote", please edit .state otherwise'
-    echo -n 'remote' > ./.state
-
-# Change URLs to work in localhost
-local:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    if [[ ! -e .state ]]; then
-        echo 'error: missing .state file, please run `just init`'
-        exit 1
-    fi
-    if [[ "$(cat .state)" == 'local' ]]; then
-        echo 'error: already in local state'
-        exit 1
-    fi
-    # Also creates a .bak backup file in case manual undo is required
-    perl -pi.bak -e 's|([(T][" ])interrato.dev|\1|' ./interrato-dev.go
-    git diff -- ./interrato-dev.go > ./local.patch
-    echo -n 'local' > ./.state
-
-# Undo changes done by the 'local' recipe
-remote:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    if [[ ! -e .state ]]; then
-        echo 'error: missing .state file, please run `just init`'
-        exit 1
-    fi
-    if [[ "$(cat .state)" == 'remote' ]]; then
-        echo 'error: already in remote state'
-        exit 1
-    fi
-    git apply -R -v ./local.patch
-    echo -n 'remote' > ./.state
+	watchexec -e go,html,css,js -c -r HTTP_HOST=interrato.dev go run .

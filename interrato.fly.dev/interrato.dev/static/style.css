@@ -1,0 +1,9 @@
+body {
+    font-family: sans-serif;
+    max-width: 800px;
+    margin-inline: auto;
+}
+
+a[rel~="external"][target="_blank"]::after {
+    content: " ↗";
+}

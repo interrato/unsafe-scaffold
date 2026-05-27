@@ -1,20 +1,27 @@
 {
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+  };
 
   outputs =
     { self, nixpkgs }:
     let
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+      forAllSystems =
+        pkgsFn:
+        nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed (
+          system: pkgsFn nixpkgs.legacyPackages.${system}
+        );
     in
     {
-      devShells.x86_64-linux.default = pkgs.mkShell {
-        packages = with pkgs; [
-          age
-          go
-          just
-          tailwindcss
-          watchexec
-        ];
-      };
+      devShells = forAllSystems (pkgs: {
+        default = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            go
+            gopls
+            just
+            watchexec
+          ];
+        };
+      });
     };
 }
