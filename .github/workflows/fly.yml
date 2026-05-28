@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - 'interrato.fly.dev/**'
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
