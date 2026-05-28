@@ -37,8 +37,10 @@ func GlobalHandler() http.Handler {
 	mux := http.NewServeMux()
 
 	mux.Handle("www.interrato.dev/", HostRedirectHandler("interrato.dev", http.StatusMovedPermanently))
-	mux.Handle("www.perpetuatheme.com/", HostRedirectHandler("interrato.dev", http.StatusMovedPermanently))
+	mux.Handle("www.emys-sse.org/", HostRedirectHandler("emys-sse.org", http.StatusMovedPermanently))
+	mux.Handle("www.perpetuatheme.com/", HostRedirectHandler("perpetuatheme.com", http.StatusMovedPermanently))
 
+	mux.Handle("emys-sse.org/{$}", http.RedirectHandler("https://github.com/interrato/emys", http.StatusFound))
 	mux.Handle("perpetuatheme.com/{$}", http.RedirectHandler("https://github.com/perpetuatheme", http.StatusFound))
 
 	// CSP style-src hashes
