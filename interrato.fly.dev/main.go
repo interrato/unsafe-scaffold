@@ -5,13 +5,14 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 	"time"
 )
 
 func main() {
-	h := MuxHandler()
+	h := GlobalHandler()
 	s := http.Server{
 		Addr: ":8080",
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -27,8 +28,13 @@ func main() {
 	log.Fatal(s.ListenAndServe())
 }
 
-func MuxHandler() http.Handler {
+func GlobalHandler() http.Handler {
 	mux := http.NewServeMux()
+
+	mux.Handle("www.interrato.dev/", HostRedirectHandler("interrato.dev", http.StatusMovedPermanently))
+	mux.Handle("www.perpetuatheme.com/", HostRedirectHandler("interrato.dev", http.StatusMovedPermanently))
+
+	mux.Handle("perpetuatheme.com/{$}", http.RedirectHandler("https://github.com/perpetuatheme", http.StatusFound))
 
 	// CSP style-src hashes
 	var styles []string
@@ -52,6 +58,18 @@ func MuxHandler() http.Handler {
 		}
 		w.Header().Set("Content-Security-Policy", "default-src 'self'; frame-ancestors 'none'; style-src"+b.String())
 		mux.ServeHTTP(w, r)
+	})
+}
+
+func HostRedirectHandler(target string, code int) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		u := &url.URL{
+			Scheme:   "https",
+			Host:     target,
+			Path:     r.URL.Path,
+			RawQuery: r.URL.RawQuery,
+		}
+		http.Redirect(w, r, u.String(), code)
 	})
 }
 
