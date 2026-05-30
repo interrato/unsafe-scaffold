@@ -15,7 +15,7 @@
     {
       devShells = forAllSystems (pkgs: {
         default = pkgs.mkShell {
-          buildInputs = with pkgs; [
+          packages = with pkgs; [
             bash-language-server
             shellcheck
             shfmt

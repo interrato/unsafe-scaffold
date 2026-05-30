@@ -43,6 +43,10 @@ func GlobalHandler() http.Handler {
 	mux.Handle("emys-sse.org/{$}", http.RedirectHandler("https://github.com/interrato/emys", http.StatusFound))
 	mux.Handle("perpetuatheme.com/{$}", http.RedirectHandler("https://github.com/perpetuatheme", http.StatusFound))
 
+	mux.HandleFunc("interrato.dev/.well-known/atproto-did", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("did:plc:4tzafowrls56qh7ap34c7w5x"))
+	})
+
 	// CSP style-src hashes
 	var styles []string
 
