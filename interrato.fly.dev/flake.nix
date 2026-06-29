@@ -7,21 +7,26 @@
     { self, nixpkgs }:
     let
       forAllSystems =
-        pkgsFn:
+        packagesFn:
         nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed (
-          system: pkgsFn nixpkgs.legacyPackages.${system}
+          system: packagesFn nixpkgs.legacyPackages.${system}
         );
     in
     {
       devShells = forAllSystems (pkgs: {
-        default = pkgs.mkShell {
+        default = pkgs.mkShellNoCC {
+          env = {
+            CGO_ENABLED = 0;
+          };
+
           packages = with pkgs; [
             bash-language-server
-            shellcheck
-            shfmt
             go
             gopls
             just
+            shellcheck
+            shfmt
+            superhtml
             watchexec
           ];
         };

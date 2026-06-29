@@ -51,7 +51,7 @@ func GlobalHandler() http.Handler {
 	var styles []string
 
 	mux.Handle("interrato.dev/{$}", StaticHandler())
-	styles = append(styles, "sha256-WWeFz2RQf9TkH7DSlPlDbGte32g2ZzmhcMz4J04CET0=")
+	styles = append(styles, "sha256-t3GJ53Z2DVY4WS1b9bmIi4qz7n1Yni6cciTBZezCPPI=")
 	mux.Handle("interrato.dev/static/fonts/", StaticHandler())
 	mux.Handle("interrato.dev/static/pdf/", StaticHandler())
 
