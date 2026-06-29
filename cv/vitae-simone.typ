@@ -3,7 +3,7 @@
 
 #show: vitae.with(
   fullname: "Simone Ragusa",
-  date: datetime(year: 2026, month: 5, day: 5),
+  date: datetime(year: 2026, month: 6, day: 29),
   logo: move(dy: 0.35em, image("logo.svg", width: 1.08em)),
 )
 
@@ -54,7 +54,7 @@
 
 #section("Teaching")[
   *Information Security*, University of Padua \
-  _Teaching Assistant_ #h(1fr) *2026 -- Present* \
+  _Teaching Assistant_ #h(1fr) *2026* \
   Designed hands-on laboratory projects including the implementation of
   symmetric encryption primitives and padding-oracle attacks, hash functions,
   message authentication codes and timing side-channel attacks, digital

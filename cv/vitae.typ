@@ -4,6 +4,8 @@
   fullname: none, // required
   date: none, // required
   logo: none,
+  lang: "en",
+  signature-line: false,
   doc,
 ) = {
   assert.ne(
@@ -24,7 +26,7 @@
   ))
   set strong(delta: 200)
   set page(paper: "a4", margin: 1.875cm)
-  set text(font: "EB Garamond", weight: "regular", size: 12pt)
+  set text(font: "EB Garamond", weight: "regular", size: 12pt, lang: lang)
 
   show heading: it => box(it)
   show link: set text(fill: arancione)
@@ -43,10 +45,15 @@
   line(length: 100%, stroke: 0.5pt)
 
   doc
+
+  if signature-line {
+    align(bottom + right, line(length: 5cm, stroke: 0.5pt))
+  }
 }
 
 #let section(name, body) = {
   set block(below: 0.6cm)
+  show heading: set par(justify: false)
   show heading: set text(weight: "regular", size: 12pt)
   show heading: it => smallcaps(it)
   grid(
