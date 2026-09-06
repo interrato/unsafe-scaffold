@@ -2,13 +2,13 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
-        <meta name="description" content="Studiare per apprendere">
+        <meta name="viewport" content="width=device-width">
 
         <title>Studiare per apprendere</title>
 
         <style>
             @font-face {
+                font-display: swap;
                 font-family: 'Cormorant SC';
                 font-style: normal;
                 font-weight: 400;
@@ -16,6 +16,7 @@
             }
 
             @font-face {
+                font-display: swap;
                 font-family: 'Cormorant SC';
                 font-style: normal;
                 font-weight: 700;
@@ -23,6 +24,7 @@
             }
 
             @font-face {
+                font-display: swap;
                 font-family: 'Cormorant';
                 font-style: normal;
                 font-weight: 400;
@@ -30,6 +32,7 @@
             }
 
             @font-face {
+                font-display: swap;
                 font-family: 'Cormorant';
                 font-style: normal;
                 font-weight: 700;
@@ -37,6 +40,7 @@
             }
 
             @font-face {
+                font-display: swap;
                 font-family: 'Ysabeau';
                 font-style: normal;
                 font-weight: 400;
@@ -44,6 +48,7 @@
             }
 
             @font-face {
+                font-display: swap;
                 font-family: 'Ysabeau';
                 font-style: italic;
                 font-weight: 400;
@@ -51,6 +56,7 @@
             }
 
             @font-face {
+                font-display: swap;
                 font-family: 'Ysabeau';
                 font-style: normal;
                 font-weight: 700;
@@ -58,6 +64,7 @@
             }
 
             @font-face {
+                font-display: swap;
                 font-family: 'Courier Prime';
                 font-style: normal;
                 font-weight: 400;
@@ -66,6 +73,9 @@
 
             :root {
                 color-scheme: light dark;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                text-rendering: geometricPrecision;
             }
 
             body {
@@ -79,21 +89,36 @@
 
             h1 {
                 font-family: 'Cormorant SC', serif;
+                text-wrap: balance;
             }
 
             h2, h3 {
                 font-family: 'Cormorant', serif;
+                text-wrap: balance;
+            }
+
+            p {
+                max-width: 63ch;
             }
 
             code {
                 font-family: 'Courier Prime', monospace;
                 font-size: 0.92em;
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
             }
 
             a[rel~='external'][target='_blank']::after {
                 content: ' ↗';
+            }
+
+            nav {
+                display: flex;
+                flex-wrap: wrap;
+                column-gap: 1.2em;
+                row-gap: 0.3lh;
+            }
+
+            nav > a {
+                white-space: nowrap;
             }
 
             .stone {
@@ -102,9 +127,8 @@
         </style>
     </head>
     <body>
-        <main>
-            <h2>Non disponibile! 😭</h2>
-            <p>Lavori in corso.</p>
-        </main>
+        <main><h2>Non disponibile! 😭</h2>
+<p>Lavori in corso.</p>
+</main>
     </body>
 </html>

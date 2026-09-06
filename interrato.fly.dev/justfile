@@ -5,5 +5,20 @@ default: develop
 
 alias help := list
 
-@develop:
-	watchexec -e go,html,css,js -c -r HTTP_HOST=interrato.dev go run .
+develop:
+	#!/usr/bin/env bash
+	set -euo pipefail
+
+	watchexec --quiet --exts md --clear -- just md2html &
+	watchexec --quiet --exts go,html,css,js --debounce 200ms --restart -- HTTP_HOST=interrato.dev go run . &
+
+	wait
+
+md2html:
+	#!/usr/bin/env bash
+	set -euo pipefail
+
+	find . -name "*.md" -printf '%P\0' |
+	while IFS= read -r -d '' file; do
+		go run ./md2html "$file"
+	done

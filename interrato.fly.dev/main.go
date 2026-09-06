@@ -58,7 +58,6 @@ func GlobalHandler() http.Handler {
 
 	mux.Handle("interrato.dev/apprendimento/", HTMLHandler("apprendimento.html"))
 	mux.Handle("interrato.dev/infosec/", HTMLHandler("infosec.html"))
-	styles = append(styles, "sha256-t3GJ53Z2DVY4WS1b9bmIi4qz7n1Yni6cciTBZezCPPI=")
 
 	interratoDEVModules := []string{"can", "carbonize", "emys", "fine", "olaf", "unsafe-scaffold"}
 
