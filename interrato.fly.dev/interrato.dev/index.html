@@ -2,13 +2,13 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
-        <meta name="description" content="Simone Ragusa">
+        <meta name="viewport" content="width=device-width">
 
         <title>Simone Ragusa</title>
 
         <style>
             @font-face {
+                font-display: swap;
                 font-family: 'Cormorant SC';
                 font-style: normal;
                 font-weight: 400;
@@ -16,6 +16,7 @@
             }
 
             @font-face {
+                font-display: swap;
                 font-family: 'Cormorant SC';
                 font-style: normal;
                 font-weight: 700;
@@ -23,6 +24,7 @@
             }
 
             @font-face {
+                font-display: swap;
                 font-family: 'Cormorant';
                 font-style: normal;
                 font-weight: 400;
@@ -30,6 +32,7 @@
             }
 
             @font-face {
+                font-display: swap;
                 font-family: 'Cormorant';
                 font-style: normal;
                 font-weight: 700;
@@ -37,6 +40,7 @@
             }
 
             @font-face {
+                font-display: swap;
                 font-family: 'Ysabeau';
                 font-style: normal;
                 font-weight: 400;
@@ -44,6 +48,7 @@
             }
 
             @font-face {
+                font-display: swap;
                 font-family: 'Ysabeau';
                 font-style: italic;
                 font-weight: 400;
@@ -51,6 +56,7 @@
             }
 
             @font-face {
+                font-display: swap;
                 font-family: 'Ysabeau';
                 font-style: normal;
                 font-weight: 700;
@@ -58,6 +64,7 @@
             }
 
             @font-face {
+                font-display: swap;
                 font-family: 'Courier Prime';
                 font-style: normal;
                 font-weight: 400;
@@ -66,6 +73,9 @@
 
             :root {
                 color-scheme: light dark;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                text-rendering: geometricPrecision;
             }
 
             body {
@@ -79,27 +89,52 @@
 
             h1 {
                 font-family: 'Cormorant SC', serif;
+                text-wrap: balance;
             }
 
             h2, h3 {
                 font-family: 'Cormorant', serif;
+                text-wrap: balance;
+            }
+
+            p {
+                max-width: 63ch;
             }
 
             code {
                 font-family: 'Courier Prime', monospace;
                 font-size: 0.92em;
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
             }
 
             a[rel~='external'][target='_blank']::after {
                 content: ' ↗';
             }
 
+            nav {
+                display: flex;
+                flex-wrap: wrap;
+                column-gap: 1.2em;
+                row-gap: 0.3lh;
+            }
+
+            nav > a {
+                white-space: nowrap;
+            }
+
             .stone {
                 display: none;
             }
         </style>
+
+        <link rel="preload" href="/static/fonts/cormorant-sc-v19-latin-700.woff2" as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="/static/fonts/cormorant-v24-latin-700.woff2" as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="/static/fonts/ysabeau-v5-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="/static/fonts/courier-prime-v11-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+        <link rel="canonical" href="https://interrato.dev/">
+        <link rel="me" href="https://ioc.exchange/@interrato">
+
+        <meta name="description" content="Simone Ragusa">
     </head>
     <body>
         <h1>Simone Ragusa</h1>
@@ -110,13 +145,11 @@
                 issues.
             </p>
 
-            <p>
+            <nav>
                 <a href="/static/pdf/vitae-simone.pdf" rel="external noreferrer" target="_blank">Curriculum Vitae</a>
-                &#8200;
                 <a href="https://github.com/interrato" rel="external noreferrer" target="_blank">GitHub</a>
-                &#8200;
                 <a href="https://bsky.app/profile/interrato.dev" rel="external noreferrer" target="_blank">Bluesky</a>
-            </p>
+            </nav>
 
             <h2>Contact</h2>
             <p>

@@ -51,12 +51,14 @@ func GlobalHandler() http.Handler {
 	var styles []string
 
 	mux.Handle("interrato.dev/{$}", StaticHandler())
-	styles = append(styles, "sha256-t3GJ53Z2DVY4WS1b9bmIi4qz7n1Yni6cciTBZezCPPI=")
-	mux.Handle("interrato.dev/static/fonts/", StaticHandler())
+	styles = append(styles, "sha256-Unli06YcxlpUr/3lLcmZtrrQQDOuRd748yoLM8cIonM=")
+
+	mux.Handle("interrato.dev/static/fonts/", WithCaching(StaticHandler()))
 	mux.Handle("interrato.dev/static/pdf/", StaticHandler())
 
 	mux.Handle("interrato.dev/apprendimento/", HTMLHandler("apprendimento.html"))
 	mux.Handle("interrato.dev/infosec/", HTMLHandler("infosec.html"))
+	styles = append(styles, "sha256-t3GJ53Z2DVY4WS1b9bmIi4qz7n1Yni6cciTBZezCPPI=")
 
 	interratoDEVModules := []string{"can", "carbonize", "emys", "fine", "olaf", "unsafe-scaffold"}
 
@@ -98,6 +100,13 @@ func HostRedirectHandler(target string, code int) http.Handler {
 			RawQuery: r.URL.RawQuery,
 		}
 		http.Redirect(w, r, u.String(), code)
+	})
+}
+
+func WithCaching(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "no-cache")
+		next.ServeHTTP(w, r)
 	})
 }
 
