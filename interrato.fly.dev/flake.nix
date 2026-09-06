@@ -21,6 +21,8 @@
 
           packages = with pkgs; [
             bash-language-server
+            docker
+            docker-language-server
             go
             gopls
             just
