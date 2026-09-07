@@ -53,7 +53,7 @@ func GlobalHandler() http.Handler {
 	mux.Handle("interrato.dev/{$}", StaticHandler())
 	styles = append(styles, "sha256-Unli06YcxlpUr/3lLcmZtrrQQDOuRd748yoLM8cIonM=")
 
-	mux.Handle("interrato.dev/static/fonts/", WithCaching(StaticHandler()))
+	mux.Handle("interrato.dev/static/fonts/{font}", FontHandler())
 	mux.Handle("interrato.dev/static/pdf/", StaticHandler())
 
 	mux.Handle("interrato.dev/apprendimento/", HTMLHandler("apprendimento.html"))
@@ -102,13 +102,6 @@ func HostRedirectHandler(target string, code int) http.Handler {
 	})
 }
 
-func WithCaching(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Cache-Control", "no-cache")
-		next.ServeHTTP(w, r)
-	})
-}
-
 //go:embed interrato.dev
 var interratoDEVContent embed.FS
 
@@ -118,6 +111,14 @@ func StaticHandler() http.Handler {
 		log.Fatal(err)
 	}
 	return http.FileServerFS(content)
+}
+
+func FontHandler() http.Handler {
+	static := StaticHandler()
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+		static.ServeHTTP(w, r)
+	})
 }
 
 //go:embed *.html
