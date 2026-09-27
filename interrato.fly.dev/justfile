@@ -9,8 +9,9 @@ develop:
 	#!/usr/bin/env bash
 	set -euo pipefail
 
-	watchexec --quiet --exts md --clear -- just md2html &
-	watchexec --quiet --exts go,html,css,js --debounce 200ms --restart -- HTTP_HOST=interrato.dev go run . &
+	watchexec --exts md --postpone --quiet --clear -- just md2html &
+	watchexec --watch md2html --quiet --clear -- just md2html &
+	watchexec --exts go,html,css,js --ignore 'md2html/*' --debounce 200ms --restart -- HTTP_HOST=interrato.dev go run . &
 
 	wait
 
