@@ -24,111 +24,153 @@ var pageTemplate = template.Must(template.New("md2html").Parse(`<!DOCTYPE html>
         <style>
             @font-face {
                 font-display: swap;
-                font-family: 'Cormorant SC';
+                font-family: 'Source Sans 3';
                 font-style: normal;
                 font-weight: 400;
-                src: url('/static/fonts/cormorant-sc-v19-latin-regular.woff2') format('woff2');
+                src: url('/static/fonts/source-sans-3-v19-latin-regular.woff2') format('woff2');
             }
 
             @font-face {
                 font-display: swap;
-                font-family: 'Cormorant SC';
-                font-style: normal;
-                font-weight: 700;
-                src: url('/static/fonts/cormorant-sc-v19-latin-700.woff2') format('woff2');
-            }
-
-            @font-face {
-                font-display: swap;
-                font-family: 'Cormorant';
-                font-style: normal;
-                font-weight: 400;
-                src: url('/static/fonts/cormorant-v24-latin-regular.woff2') format('woff2');
-            }
-
-            @font-face {
-                font-display: swap;
-                font-family: 'Cormorant';
-                font-style: normal;
-                font-weight: 700;
-                src: url('/static/fonts/cormorant-v24-latin-700.woff2') format('woff2');
-            }
-
-            @font-face {
-                font-display: swap;
-                font-family: 'Ysabeau';
-                font-style: normal;
-                font-weight: 400;
-                src: url('/static/fonts/ysabeau-v5-latin-regular.woff2') format('woff2');
-            }
-
-            @font-face {
-                font-display: swap;
-                font-family: 'Ysabeau';
+                font-family: 'Source Sans 3';
                 font-style: italic;
                 font-weight: 400;
-                src: url('/static/fonts/ysabeau-v5-latin-italic.woff2') format('woff2');
+                src: url('/static/fonts/source-sans-3-v19-latin-italic.woff2') format('woff2');
             }
 
             @font-face {
                 font-display: swap;
-                font-family: 'Ysabeau';
+                font-family: 'Source Sans 3';
                 font-style: normal;
                 font-weight: 700;
-                src: url('/static/fonts/ysabeau-v5-latin-700.woff2') format('woff2');
+                src: url('/static/fonts/source-sans-3-v19-latin-700.woff2') format('woff2');
             }
 
             @font-face {
                 font-display: swap;
-                font-family: 'Courier Prime';
+                font-family: 'Source Sans 3';
+                font-style: italic;
+                font-weight: 700;
+                src: url('/static/fonts/source-sans-3-v19-latin-700italic.woff2') format('woff2');
+            }
+
+            @font-face {
+                font-display: swap;
+                font-family: 'Fira Code';
                 font-style: normal;
                 font-weight: 400;
-                src: url('/static/fonts/courier-prime-v11-latin-regular.woff2') format('woff2');
+                src: url('/static/fonts/fira-code-v27-latin-regular.woff2') format('woff2');
+            }
+
+            @font-face {
+                font-display: swap;
+                font-family: 'Fira Code';
+                font-style: normal;
+                font-weight: 700;
+                src: url('/static/fonts/fira-code-v27-latin-700.woff2') format('woff2');
             }
 
             :root {
                 color-scheme: light dark;
+                --bg: light-dark(#faf4dc, #16171c);
+                --fg: light-dark(#000000, #ededed);
+                --muted: light-dark(#525252, #c4c4c4);
+                --link: light-dark(#0000ee, #8fb3fc);
+                --border: light-dark(#bfb9a2, #494a50);
+                --code-bg: light-dark(#e9e3cb, #2a2b31);
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
-                text-rendering: geometricPrecision;
+            }
+
+            html {
+                background: var(--bg);
+                color: var(--fg);
+                font-family: 'Source Sans 3', ui-sans-serif, sans-serif;
+                font-size: 18px;
+                line-height: 1.55;
+                text-underline-position: from-font;
             }
 
             body {
-                font-family: 'Ysabeau', sans-serif;
-                font-size: 1.25rem;
                 max-width: 780px;
                 margin-block: 80px;
                 margin-inline: auto;
                 padding-inline: 20px;
             }
 
-            h1 {
-                font-family: 'Cormorant SC', serif;
+            code, pre, kbd, samp {
+                font-family: 'Fira Code', ui-monospace, monospace;
+                font-size: 0.95em;
+            }
+
+            code:not(.unstyled), kbd, samp {
+                font-size: 0.9em;
+                background: var(--code-bg);
+                padding: 0.08em 0.24em;
+                border-radius: 2px;
+            }
+
+            pre {
+                font-size: 0.9em;
+                line-height: 1.45;
+                background: var(--code-bg);
+                padding: 0.7em 0.9em;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+
+            pre code:not(.unstyled) {
+                font-size: inherit;
+                background: none;
+                padding: 0;
+                border-radius: 0;
+            }
+
+            a {
+                color: var(--link);
+                text-decoration: none;
+            }
+
+            a:hover {
+                text-decoration: underline;
+            }
+
+            h1, h2, h3, h4, h5, h6 {
+                line-height: 1.25;
+                margin: 1.75em 0 0.6em;
+                text-rendering: optimizeLegibility;
                 text-wrap: balance;
             }
 
-            h2, h3 {
-                font-family: 'Cormorant', serif;
-                text-wrap: balance;
+            h1 { font-size: 1.95em; }
+            h2 { font-size: 1.45em; }
+            h3 { font-size: 1.15em; }
+            h4, h5, h6 { font-size: 1em; }
+
+            hr {
+                border: none;
+                border-top: 1px solid var(--border);
+                margin: 2em 0;
+            }
+
+            p, ul, ol, table, blockquote {
+                margin: 0.9em 0;
             }
 
             p {
-                max-width: 63ch;
+                max-width: 65ch;
             }
 
-            code {
-                font-family: 'Courier Prime', monospace;
-                font-size: 0.92em;
-            }
-
-            a[rel~='external'][target='_blank']::after {
-                content: ' ↗';
+            blockquote {
+                border-left: medium solid var(--border);
+                padding-left: 1em;
+                color: var(--muted);
             }
 
             nav {
                 display: flex;
                 flex-wrap: wrap;
-                column-gap: 1.2em;
+                column-gap: 1.35em;
                 row-gap: 0.3lh;
             }
 

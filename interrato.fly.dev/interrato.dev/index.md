@@ -16,4 +16,4 @@ in online privacy and information security issues.
 
 ## Contact
 
-<code>hi@</code><span class="stone">void.</span><code>interrato.dev</code>
+<code class="unstyled">hi@</code><span class="stone">void.</span><code class="unstyled">interrato.dev</code>
