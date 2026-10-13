@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"os"
 	"regexp"
 	"slices"
 	"strings"
@@ -21,9 +20,6 @@ func main() {
 	s := http.Server{
 		Addr: ":8080",
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if host := os.Getenv("HTTP_HOST"); host != "" && r.Host == "localhost:8080" {
-				r.Host = host
-			}
 			h.ServeHTTP(w, r)
 		}),
 		ReadTimeout:  1 * time.Minute,

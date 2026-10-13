@@ -21,7 +21,7 @@
 
           packages = with pkgs; [
             bash-language-server
-            docker
+            caddy
             docker-language-server
             go
             gopls
