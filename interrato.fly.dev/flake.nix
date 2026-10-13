@@ -25,7 +25,6 @@
             docker-language-server
             go
             gopls
-            just
             shellcheck
             shfmt
             superhtml
