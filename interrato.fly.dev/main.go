@@ -74,6 +74,8 @@ func GlobalHandler() http.Handler {
 
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Content-Security-Policy", "default-src 'none'; "+
+			"base-uri 'none'; "+
+			"form-action 'self'; "+
 			"frame-ancestors 'none'; "+
 			"require-trusted-types-for 'script'; "+
 			"connect-src 'self' https://static.interrato.dev; "+
