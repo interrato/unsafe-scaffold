@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
+	"crypto/rand"
 	"embed"
+	"encoding/hex"
 	"fmt"
 	"io/fs"
 	"log"
@@ -12,6 +15,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/jub0bs/cors"
 	"golang.org/x/mod/semver"
 )
 
@@ -43,15 +47,10 @@ func GlobalHandler() http.Handler {
 		w.Write([]byte("did:plc:4tzafowrls56qh7ap34c7w5x"))
 	})
 
-	// CSP style-src hashes
-	var styles []string
+	mux.Handle("static.interrato.dev/styles/{style}", StaticHandler())
+	mux.Handle("static.interrato.dev/fonts/{font}", WithCORS(FontHandler()))
 
-	mux.Handle("interrato.dev/{$}", StaticHandler())
-	styles = append(styles, "sha256-v08vSjvRFqHT7ncHwlAu7p11BcPuzak4FekIExnWIA8=")
-
-	mux.Handle("interrato.dev/static/fonts/{font}", FontHandler())
-	mux.Handle("interrato.dev/static/pdf/", StaticHandler())
-
+	mux.Handle("interrato.dev/{$}", HTMLHandler("index.html"))
 	mux.Handle("interrato.dev/apprendimento/", HTMLHandler("apprendimento.html"))
 	mux.Handle("interrato.dev/infosec/", HTMLHandler("infosec.html"))
 
@@ -74,13 +73,13 @@ func GlobalHandler() http.Handler {
 		}
 
 		w.Header().Set("X-Content-Type-Options", "nosniff")
-		var b strings.Builder
-		for _, hash := range styles {
-			b.WriteString(" '")
-			b.WriteString(hash)
-			b.WriteString("'")
-		}
-		w.Header().Set("Content-Security-Policy", "default-src 'self'; frame-ancestors 'none'; style-src"+b.String())
+		w.Header().Set("Content-Security-Policy", "default-src 'none'; "+
+			"frame-ancestors 'none'; "+
+			"require-trusted-types-for 'script'; "+
+			"connect-src 'self' https://static.interrato.dev; "+
+			"script-src 'self' https://static.interrato.dev; "+
+			"style-src 'self' https://static.interrato.dev; "+
+			"font-src 'self' https://static.interrato.dev")
 
 		mux.ServeHTTP(w, r)
 	})
@@ -98,15 +97,25 @@ func HostRedirectHandler(target string, code int) http.Handler {
 	})
 }
 
-//go:embed interrato.dev
-var interratoDEVContent embed.FS
+//go:embed static
+var staticContent embed.FS
 
 func StaticHandler() http.Handler {
-	content, err := fs.Sub(interratoDEVContent, "interrato.dev")
+	content, err := fs.Sub(staticContent, "static")
 	if err != nil {
 		log.Fatal(err)
 	}
 	return http.FileServerFS(content)
+}
+
+func WithCORS(h http.Handler) http.Handler {
+	cors, err := cors.NewMiddleware(cors.Config{
+		Origins: []string{"https://interrato.dev", "https://*.interrato.dev"},
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	return cors.Wrap(h)
 }
 
 func FontHandler() http.Handler {
@@ -126,9 +135,64 @@ func HTMLHandler(name string) http.Handler {
 		log.Fatal(err)
 	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		response := bytes.Clone(content)
+		for _, tag := range []string{"script", "style"} {
+			for bytes.Contains(response, []byte(`<`+tag+`>`)) {
+				nonce := generateNonce()
+				response = bytes.Replace(
+					response,
+					[]byte(`<`+tag+`>`),
+					[]byte(`<`+tag+` nonce="`+nonce+`">`),
+					1, // each one gets a different nonce
+				)
+				appendToCSP(w, tag+"-src", "'nonce-"+nonce+"'")
+			}
+		}
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		w.Write(content)
+		w.Write(response)
 	})
+}
+
+func generateNonce() string {
+	nonce := make([]byte, 16)
+	rand.Read(nonce)
+	return hex.EncodeToString(nonce)
+}
+
+func appendToCSP(w http.ResponseWriter, directive, source string) {
+	header := w.Header().Get("Content-Security-Policy")
+	var b strings.Builder
+	b.Grow(len(header) + 1 + len(source)) // current header + space + new source expression (best case)
+	found := false
+	for {
+		policy, rest, more := strings.Cut(header, ";")
+		policy = strings.TrimSpace(policy)
+		if policy != "" {
+			if b.Len() > 0 {
+				b.WriteString("; ")
+			}
+			b.WriteString(policy)
+			name, _, _ := strings.Cut(policy, " ")
+			if !found && strings.EqualFold(name, directive) {
+				b.WriteByte(' ')
+				b.WriteString(source)
+				found = true
+			}
+		}
+		if !more {
+			break
+		}
+		header = rest
+	}
+	if !found {
+		if b.Len() > 0 {
+			b.WriteString("; ")
+		}
+		b.WriteString(directive)
+		b.WriteByte(' ')
+		b.WriteString(source)
+	}
+	w.Header().Set("Content-Security-Policy", b.String())
 }
 
 func GoImportHandler(module, repo string) http.Handler {
