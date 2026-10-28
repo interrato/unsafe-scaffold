@@ -23,7 +23,7 @@
             bash-language-server
             caddy
             docker-language-server
-            go
+            go_1_27
             gopls
             shellcheck
             shfmt
